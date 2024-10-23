@@ -8,8 +8,8 @@ const ShoeGrid = () => {
   return (
     <Wrapper>
       {SHOES.map((shoe) => (
-        <ShoeWrapper key={shoe.slug} {...shoe}>
-          <ShoeCard />
+        <ShoeWrapper key={shoe.slug}>
+          <ShoeCard {...shoe} />
         </ShoeWrapper>
       ))}
     </Wrapper>
