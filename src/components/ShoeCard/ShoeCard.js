@@ -32,22 +32,12 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
-  const tagText = {
-    'new-release': 'Just released!',
-    'on-sale': 'Sale',
-    default: null,
-  }[variant];
-
-  const tagColor =
-    {
-      'new-release': COLORS.secondary,
-      'on-sale': COLORS.primary,
-    }[variant] || null;
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
-          {tagText && <Tag style={{ '--color': tagColor }}>{tagText}</Tag>}
+          {variant === 'on-sale' && <SaleFlag>On sale</SaleFlag>}
+          {variant === 'new-release' && <NewFlag>Just released!</NewFlag>}
           <Image alt="" src={imageSrc} />
         </ImageWrapper>
         <Spacer size={12} />
@@ -55,22 +45,22 @@ const ShoeCard = ({
           <Name>{name}</Name>
           <Price
             style={{
-              '--textDecoration':
+              '--text-decoration':
                 variant === 'on-sale' ? 'line-through' : 'none',
-              '--color': variant === 'on-sale' ? COLORS.gray[700] : 'inherit',
+              '--color': variant === 'on-sale' ? COLORS.gray[700] : undefined,
             }}
           >
             {formatPrice(price)}
           </Price>
+        </Row>
+        <Row>
+          <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
           {variant === 'on-sale' && (
             <SalePrice>
               <VisuallyHidden>Sale price: </VisuallyHidden>
               {formatPrice(salePrice)}
             </SalePrice>
           )}
-        </Row>
-        <Row>
-          <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
         </Row>
       </Wrapper>
     </Link>
@@ -88,16 +78,25 @@ const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Tag = styled.div`
+const Flag = styled.div`
   position: absolute;
-  background-color: var(--color);
-  color: ${COLORS.white};
-  padding: 6px 10px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  right: -8px;
+  right: -4px;
   top: 12px;
+  color: ${COLORS.white};
+  height: 32px;
+  line-height: 32px;
+  padding: 0 10px;
+  font-size: 0.875rem;
+  font-weight: ${WEIGHTS.bold};
   border-radius: 2px;
+`;
+
+const NewFlag = styled(Flag)`
+  background-color: ${COLORS.secondary};
+`;
+
+const SaleFlag = styled(Flag)`
+  background-color: ${COLORS.primary};
 `;
 
 const Image = styled.img`
@@ -118,7 +117,7 @@ const Name = styled.h3`
 `;
 
 const Price = styled.span`
-  text-decoration: var(--textDecoration);
+  text-decoration: var(--text-decoration);
   color: var(--color);
 `;
 
@@ -127,9 +126,6 @@ const ColorInfo = styled.p`
 `;
 
 const SalePrice = styled.span`
-  position: absolute;
-  right: 0;
-  top: 1.4rem;
   font-weight: ${WEIGHTS.medium};
   color: ${COLORS.primary};
 `;
